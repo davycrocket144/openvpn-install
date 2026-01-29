@@ -1870,9 +1870,10 @@ function installOpenVPNRepo() {
         log_info "Using OpenVPN repository codename: $REPO_CODENAME"
 
         # Write OpenVPN repo
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/openvpn-repo-public.asc] \
-https://build.openvpn.net/debian/openvpn/stable ${REPO_CODENAME} main" \
-        > /etc/apt/sources.list.d/openvpn-aptrepo.list
+        repo_line="deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/openvpn-repo-public.asc] https://build.openvpn.net/debian/openvpn/stable ${REPO_CODENAME} main"
+
+		echo "$repo_line" >/etc/apt/sources.list.d/openvpn-aptrepo.list
+
 
         # Update with OpenVPN repo enabled
         run_cmd_fatal "Updating package lists with OpenVPN repository" apt-get update
