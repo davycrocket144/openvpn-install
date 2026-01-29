@@ -1830,54 +1830,54 @@ function isDCOAvailable() {
 }
 
 function installOpenVPNRepo() {
-    log_info "Setting up official OpenVPN repository..."
+	log_info "Setting up official OpenVPN repository..."
 
-    if [[ $OS =~ (debian|ubuntu) ]]; then
+	if [[ $OS =~ (debian|ubuntu) ]]; then
 
-        # Remove stale OpenVPN repo (may contain Mint codename like 'zena')
-        if [[ -f /etc/apt/sources.list.d/openvpn-aptrepo.list ]]; then
-            log_warn "Removing existing OpenVPN repository file"
-            rm -f /etc/apt/sources.list.d/openvpn-aptrepo.list
-        fi
+		# Remove stale OpenVPN repo (may contain Mint codename like 'zena')
+		if [[ -f /etc/apt/sources.list.d/openvpn-aptrepo.list ]]; then
+			log_warn "Removing existing OpenVPN repository file"
+			rm -f /etc/apt/sources.list.d/openvpn-aptrepo.list
+		fi
 
-        # Base system update (no OpenVPN repo yet)
-        run_cmd_fatal "Updating base package lists" apt-get update
-        run_cmd_fatal "Installing prerequisites" apt-get install -y ca-certificates curl
+		# Base system update (no OpenVPN repo yet)
+		run_cmd_fatal "Updating base package lists" apt-get update
+		run_cmd_fatal "Installing prerequisites" apt-get install -y ca-certificates curl
 
-        # Create keyrings directory
-        run_cmd "Creating keyrings directory" mkdir -p /etc/apt/keyrings
+		# Create keyrings directory
+		run_cmd "Creating keyrings directory" mkdir -p /etc/apt/keyrings
 
-        # Download OpenVPN signing key
-        if ! run_cmd "Downloading OpenVPN GPG key" \
-            curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg \
-            -o /etc/apt/keyrings/openvpn-repo-public.asc; then
-            log_fatal "Failed to download OpenVPN repository GPG key"
-        fi
+		# Download OpenVPN signing key
+		if ! run_cmd "Downloading OpenVPN GPG key" \
+			curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg \
+			-o /etc/apt/keyrings/openvpn-repo-public.asc; then
+			log_fatal "Failed to download OpenVPN repository GPG key"
+		fi
 
-        # Determine correct repo codename
-        if [[ "$ID" == "linuxmint" ]]; then
-            if [[ -z "$UBUNTU_CODENAME" ]]; then
-                log_fatal "Linux Mint detected but UBUNTU_CODENAME is missing."
-            fi
-            REPO_CODENAME="$UBUNTU_CODENAME"
-        else
-            if [[ -z "$VERSION_CODENAME" ]]; then
-                log_fatal "VERSION_CODENAME is not set."
-            fi
-            REPO_CODENAME="$VERSION_CODENAME"
-        fi
+		# Determine correct repo codename
+		if [[ "$ID" == "linuxmint" ]]; then
+			if [[ -z "$UBUNTU_CODENAME" ]]; then
+				log_fatal "Linux Mint detected but UBUNTU_CODENAME is missing."
+			fi
+			REPO_CODENAME="$UBUNTU_CODENAME"
+		else
+			if [[ -z "$VERSION_CODENAME" ]]; then
+				log_fatal "VERSION_CODENAME is not set."
+			fi
+			REPO_CODENAME="$VERSION_CODENAME"
+		fi
 
-        log_info "Using OpenVPN repository codename: $REPO_CODENAME"
+		log_info "Using OpenVPN repository codename: $REPO_CODENAME"
 
-        # Write OpenVPN repo
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/openvpn-repo-public.asc] \
+		# Write OpenVPN repo
+		echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/openvpn-repo-public.asc] \
 		https://build.openvpn.net/debian/openvpn/stable ${REPO_CODENAME} main" \
-        > /etc/apt/sources.list.d/openvpn-aptrepo.list
+			>/etc/apt/sources.list.d/openvpn-aptrepo.list
 
-        # Update with OpenVPN repo enabled
-        run_cmd_fatal "Updating package lists with OpenVPN repository" apt-get update
+		# Update with OpenVPN repo enabled
+		run_cmd_fatal "Updating package lists with OpenVPN repository" apt-get update
 
-        log_info "OpenVPN official repository configured"
+		log_info "OpenVPN official repository configured"
 
 	elif [[ $OS =~ (centos|oracle) ]]; then
 		# For RHEL-based systems, use Fedora Copr (OpenVPN 2.6 stable)
