@@ -1878,7 +1878,7 @@ https://build.openvpn.net/debian/openvpn/stable ${REPO_CODENAME} main" \
         run_cmd_fatal "Updating package lists with OpenVPN repository" apt-get update
 
         log_info "OpenVPN official repository configured"
-    fi
+    
 
 	elif [[ $OS =~ (centos|oracle) ]]; then
 		# For RHEL-based systems, use Fedora Copr (OpenVPN 2.6 stable)
