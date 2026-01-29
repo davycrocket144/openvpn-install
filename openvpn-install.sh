@@ -1829,7 +1829,7 @@ function isDCOAvailable() {
 	return 1
 }
 
-install_openvpn_repo() {
+function installOpenVPNRepo() {
     log_info "Configuring official OpenVPN repository"
 
     # On Debian/Ubuntu/Mint only
