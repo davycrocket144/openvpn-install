@@ -1839,8 +1839,8 @@ function installOpenVPNRepo() {
                 if [[ -f /etc/apt/sources.list.d/openvpn-aptrepo.list ]]; then
                         log_warn "Removing existing OpenVPN repository file"
                         rm -f /etc/apt/sources.list.d/openvpn-aptrepo.list
-                fi      
-                        
+                fi
+
                 # Update core lists and install prerequisites before adding new repo
                 run_cmd_fatal "Updating base package lists" apt-get update
                 run_cmd_fatal "Installing prerequisites" apt-get install -y ca-certificates curl
